@@ -134,7 +134,6 @@ class ComposeVerticalSliderState {
  * @param onStopTrackingTouch lambda that is invoked when the slider value changes when [MotionEvent.ACTION_UP] is triggered.
  */
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalComposeUiApi
 @Composable
 fun ComposeVerticalSlider(
@@ -204,7 +203,7 @@ fun ComposeVerticalSlider(
                             if (state.motionId == null) {
                                 for (i in 0 until motionEvent.pointerCount) {
                                     if (state.globalRect?.contains(Offset(
-                                            motionEvent.getRawX(i), motionEvent.getRawY(i))
+                                            motionEvent.rawX, motionEvent.rawY)
                                         ) == true) {
                                         state.motionId = motionEvent.getPointerId(i)
                                         break

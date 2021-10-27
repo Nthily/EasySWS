@@ -17,3 +17,4 @@ C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\net5.0\swsServer
 C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\net5.0\ref\swsServer.dll
 C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\net5.0\swsServer.pdb
 C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\net5.0\swsServer.genruntimeconfig.cache
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\net5.0\swsServer.csproj.CopyComplete

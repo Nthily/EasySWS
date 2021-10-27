@@ -4,7 +4,6 @@ import android.Manifest
 import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -13,7 +12,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -80,7 +78,6 @@ class MainActivity : ComponentActivity(){
     private val appViewModel by viewModels<AppViewModel>()
     private val consoleViewModel by viewModels<ConsoleViewModel>()
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     @ExperimentalComposeUiApi
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {

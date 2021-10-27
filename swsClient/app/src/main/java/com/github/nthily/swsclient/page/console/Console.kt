@@ -33,7 +33,6 @@ import java.lang.Exception
 
 // 控制器的界面
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalComposeUiApi
 @Composable
 fun Console(

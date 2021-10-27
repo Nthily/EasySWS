@@ -1,10 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\swsServer",
-    "\\swsServer\\swsServer",
-    "\\swsServer\\swsServer\\Utils"
+    ""
   ],
-  "SelectedNode": "\\swsServer\\swsServer\\Utils\\Joystick.cs",
+  "SelectedNode": "\\swsServer.sln",
   "PreviewInSolutionExplorer": false
 }
