@@ -92,7 +92,6 @@ namespace swsServer
                 case 1: // buttons
                 {
                     var value = BitConverter.ToUInt32(data, 2);
-                    Console.WriteLine(value);
                     _joystickState.Buttons = value;
                     _joystick.UpdateVJD(_joystickState.bDevice, ref _joystickState);
                     break;
