@@ -208,6 +208,6 @@ fun BluetoothDevice.removeBond() {
 }
 
 sealed class Screen(val route: String) {
-    object Main: Screen("main")
+    object Bluetooth: Screen("bluetooth")
     object Console : Screen("console")
 }

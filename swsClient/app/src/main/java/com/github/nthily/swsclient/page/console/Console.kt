@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.github.nthily.swsclient.components.SteeringSensor
 import com.github.nthily.swsclient.ui.view.ComposeVerticalSlider
 import com.github.nthily.swsclient.ui.view.DownShiftButton
 import com.github.nthily.swsclient.ui.view.UpShiftButton
@@ -30,6 +31,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.util.*
+import kotlin.concurrent.timerTask
 
 // 控制器的界面
 
@@ -53,14 +56,12 @@ fun Console(
 
     DisposableEffect(true) {
         // 当进入这个 Composable
-        consoleViewModel.registerSensorListeners()
-        consoleViewModel.onSensorDataChanged = { data ->
-            if (appViewModel.mBluetoothSocket.isConnected && appViewModel.serverEnabled.value) {
-                scope.launch(Dispatchers.IO) { os.write(Sender.getSensorData(data)) }
-            }
-        }
+        //consoleViewModel.registerSensorListeners()
+        SteeringSensor.getInstance()?.start()
+
         onDispose { // 当离开这个 Composable
-            consoleViewModel.unregisterListener()   // 取消传感器监听器
+            //consoleViewModel.unregisterListener()   // 取消传感器监听器
+            SteeringSensor.getInstance()?.stop()
         }
     }
 

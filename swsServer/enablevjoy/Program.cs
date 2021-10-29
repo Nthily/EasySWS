@@ -11,22 +11,29 @@ namespace enablevjoy
             try
             {
                 var deviceInfo = DeviceInstallation.EnumDevices(hdiGuid);
+                Console.WriteLine(deviceInfo.Length);
 
                 foreach (var device in deviceInfo)
                 {
+                    Console.WriteLine(device.Description);
                     if (device.Description == "vJoy Device")
                     {
+                        Console.WriteLine("aaaa");
                         vJoyInstanceId = device.InstanceId;
                         break;
                     }
                 }
                 DeviceInstallation.EnableDevice(hdiGuid, vJoyInstanceId);
+                Console.ReadLine();
                 return 0;
             } 
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(ex);
+                Console.ReadLine();
                 return 114514;
             }
+            
         }
     }
 }
