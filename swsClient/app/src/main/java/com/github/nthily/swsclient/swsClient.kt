@@ -6,32 +6,35 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.github.nthily.swsclient.components.BluetoothCenter
+import com.github.nthily.swsclient.components.DataClient
+import com.github.nthily.swsclient.components.Navigator
 import com.github.nthily.swsclient.components.SteeringSensor
 import com.github.nthily.swsclient.page.bluetooth.Bluetooth
 import com.github.nthily.swsclient.page.console.Console
 import com.github.nthily.swsclient.ui.theme.SwsClientTheme
-import com.github.nthily.swsclient.utils.Sender
-import com.github.nthily.swsclient.utils.Utils
+import com.github.nthily.swsclient.components.Sender
 import com.github.nthily.swsclient.viewModel.AppViewModel
+import com.github.nthily.swsclient.viewModel.BluetoothViewModel
 import com.github.nthily.swsclient.viewModel.ConsoleViewModel
 import com.github.nthily.swsclient.viewModel.Screen
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import java.lang.Exception
-import android.annotation.SuppressLint
-import android.view.WindowManager
-import java.lang.reflect.Method
-
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity(){
 
     private val appViewModel by viewModels<AppViewModel>()
+    private val bluetoothViewModel by viewModels<BluetoothViewModel>()
     private val consoleViewModel by viewModels<ConsoleViewModel>()
 
     @ExperimentalComposeUiApi
@@ -39,17 +42,28 @@ class MainActivity : ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // 初始化组件
+        BluetoothCenter.getInstance(applicationContext).bind(this)
+        SteeringSensor.getInstance(applicationContext).bind(this)
+        DataClient.getInstance(applicationContext) {
+            val buffer = ByteArray(1024)
+            val len = read(buffer)
+            buffer.sliceArray(0 until len)
+        }.bind(this)
+        Navigator.getInstance(applicationContext).bind(this)
+
+        // 转发传感器数据
+        lifecycleScope.launch {
+            DataClient.getInstance()?.repeatWhenConnected {
+                SteeringSensor.getInstance()?.steeringFlow?.collect { e ->
+                    DataClient.getInstance()?.send(Sender.getSensorData(e.steering))
+                }
+            }
+        }
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        SteeringSensor.getInstance(applicationContext) { steering ->
-            appViewModel.mBluetoothSocket.outputStream.write(Sender.getSensorData(steering))
-        }.bind(this)
-
-        lifecycle.addObserver(appViewModel)
-        lifecycle.addObserver(consoleViewModel)
-
         setContent {
-
             SwsClientTheme {
 
                 val navController = rememberNavController()
@@ -60,15 +74,37 @@ class MainActivity : ComponentActivity(){
                     systemUiController.setStatusBarColor(Color.Transparent, useDarkIcons)
                 }
 
+                LaunchedEffect(Unit) {
+                    Navigator.getInstance()?.navigateFlow?.collect { e ->
+                        when (e) {
+                            is Navigator.Companion.NavigateEvent -> {
+                                navController.navigate(e.destination)
+                            }
+                            is Navigator.Companion.NavigateBackEvent -> {
+                                navController.popBackStack()
+                            }
+                        }
+                    }
+                }
+
                 NavHost(navController = navController, startDestination = Screen.Bluetooth.route) {
                     composable(Screen.Bluetooth.route) {
-                        Bluetooth(appViewModel, navController)
+                        Bluetooth(bluetoothViewModel)
                     }
                     composable(Screen.Console.route) {
-                        Console(appViewModel, consoleViewModel, navController)
+                        Console(consoleViewModel, navController) {
+                            bluetoothViewModel.disconnect()
+                        }
                     }
                 }
             }
         }
     }
+
+    companion object {
+
+        private const val TAG = "MainActivity"
+
+    }
+
 }

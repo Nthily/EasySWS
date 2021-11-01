@@ -1,4 +1,4 @@
-package com.github.nthily.swsclient.utils
+package com.github.nthily.swsclient.components
 
 // 发送控制器的数据到服务器端的代码
 // 数据包的构成为 [数据包长度][数据包类型][子类型][数据]

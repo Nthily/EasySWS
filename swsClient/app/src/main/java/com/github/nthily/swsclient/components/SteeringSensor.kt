@@ -12,18 +12,29 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import com.github.nthily.swsclient.viewModel.ConsoleViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 class SteeringSensor private constructor(
-    context: Context,
-    var onSteeringChanged: ((Float) -> Unit)? = null
+    context: Context
 ) : DefaultLifecycleObserver, SensorEventListener {
 
     var started = false
         private set
 
+    private val _steeringFlow = MutableSharedFlow<SteeringEvent>(extraBufferCapacity = 1)
+
+    val steeringFlow = _steeringFlow.asSharedFlow()
+
     private val _sensorManager = context.applicationContext.getSystemService(
         SENSOR_SERVICE) as SensorManager
+    private val _steeringScope = CoroutineScope(Job() + Dispatchers.Default)
 
     private var _accelerometer: Sensor? = null
     private var _magnetometer: Sensor? = null
@@ -106,34 +117,31 @@ class SteeringSensor private constructor(
     // SensorEventListener
 
     override fun onSensorChanged(event: SensorEvent?) {
-        when (event?.sensor?.type) {
-            Sensor.TYPE_ACCELEROMETER -> _gravity = event.values
-            Sensor.TYPE_MAGNETIC_FIELD -> _geomagnetic = event.values
-            Sensor.TYPE_GAME_ROTATION_VECTOR -> _rotation = event.values
-        }
-        val steering = when (_supportedSensorLevel) {
-            SupportedSensorLevel.BASIC -> {
-                ((1 + (_gravity[1] / SensorManager.STANDARD_GRAVITY)) / 2)
+        _steeringScope.launch {
+            when (event?.sensor?.type) {
+                Sensor.TYPE_ACCELEROMETER -> _gravity = event.values
+                Sensor.TYPE_MAGNETIC_FIELD -> _geomagnetic = event.values
+                Sensor.TYPE_GAME_ROTATION_VECTOR -> _rotation = event.values
             }
-            SupportedSensorLevel.MEDIUM -> {
-                SensorManager.getRotationMatrix(
-                    _matrix, null, _gravity, _geomagnetic
-                )
-                SensorManager.getOrientation(_matrix, _orientation)
-                (((Math.PI / 2) - _orientation[1]) / Math.PI).toFloat()
-            }
-            SupportedSensorLevel.FULL -> {
-                SensorManager.getRotationMatrixFromVector(_matrix, _rotation)
-                SensorManager.getOrientation(_matrix, _orientation)
-                (((Math.PI / 2) - _orientation[1]) / Math.PI).toFloat()
-            }
-            else -> 0.5F
-        }.coerceIn(0.0F, 1.0F)
-        try {
-            onSteeringChanged?.invoke(steering)
-        } catch (ex: Exception) {
-            stop()
-            ex.printStackTrace()
+            val steering = when (_supportedSensorLevel) {
+                SupportedSensorLevel.BASIC -> {
+                    ((1 + (_gravity[1] / SensorManager.STANDARD_GRAVITY)) / 2)
+                }
+                SupportedSensorLevel.MEDIUM -> {
+                    SensorManager.getRotationMatrix(
+                        _matrix, null, _gravity, _geomagnetic
+                    )
+                    SensorManager.getOrientation(_matrix, _orientation)
+                    (((Math.PI / 2) - _orientation[1]) / Math.PI).toFloat()
+                }
+                SupportedSensorLevel.FULL -> {
+                    SensorManager.getRotationMatrixFromVector(_matrix, _rotation)
+                    SensorManager.getOrientation(_matrix, _orientation)
+                    (((Math.PI / 2) - _orientation[1]) / Math.PI).toFloat()
+                }
+                else -> 0.5F
+            }.coerceIn(0.0F, 1.0F)
+            _steeringFlow.emit(SteeringEvent(steering))
         }
     }
 
@@ -144,23 +152,30 @@ class SteeringSensor private constructor(
 
     companion object {
 
+        private const val TAG = "SteeringSensor"
+
         @Volatile
         private var _instance: SteeringSensor? = null
+
 
         fun getInstance(): SteeringSensor? {
             return _instance
         }
 
-        fun getInstance(
-            context: Context,
-            onSteeringChanged: ((Float) -> Unit)? = null
-        ): SteeringSensor {
+        fun getInstance(context: Context): SteeringSensor {
             return _instance ?: synchronized(this) {
-                val instance = SteeringSensor(context, onSteeringChanged)
+                val instance = SteeringSensor(context)
                 _instance = instance
                 instance
             }
         }
+
+
+        sealed interface EventInfo
+        object Event : EventInfo
+
+        data class SteeringEvent(val steering: Float) : EventInfo
+
 
         enum class SupportedSensorLevel {
             NONE, BASIC, MEDIUM, FULL

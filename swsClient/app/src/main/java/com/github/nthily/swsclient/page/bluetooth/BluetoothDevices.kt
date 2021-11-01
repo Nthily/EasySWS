@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -31,41 +32,41 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.github.nthily.swsclient.viewModel.AppViewModel
+import com.github.nthily.swsclient.viewModel.BluetoothViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BluetoothDevices(
-    appViewModel: AppViewModel,
+    bluetoothViewModel: BluetoothViewModel,
     sheetState: ModalBottomSheetState
 ) {
     val context = LocalContext.current
-    val pairedDevices = remember { appViewModel.pairedDevices }
-    val scannedDevices  = remember { appViewModel.scannedDevices }
-    val bthEnabled = remember { appViewModel.bthEnabled }
-    val bthDiscovering = remember { appViewModel.bthDiscovering }
+    val pairedDevices = remember { bluetoothViewModel.pairedDevices }
+    val scannedDevices = remember { bluetoothViewModel.scannedDevices }
+    val bthEnabled by remember { bluetoothViewModel.bthEnabled }
+    val bthDiscovering by remember { bluetoothViewModel.bthDiscovering }
     val scope = rememberCoroutineScope()
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        if (isGranted) appViewModel.startDeviceScan()
+        if (isGranted) bluetoothViewModel.startDiscovery()
         else Toast.makeText(context, "开启权限失败", Toast.LENGTH_LONG).show()
     }
 
-    if(bthEnabled.value) {
+    if(bthEnabled) {
         Column {
             if(pairedDevices.isNotEmpty()) {
                 PairedBluetoothDevices(
                     pairedDevices = pairedDevices,
                     onClickPairedDevice = {
-                        appViewModel.selectedPairedDevice.value = it
+                        bluetoothViewModel.selectedPairedDevice.value = it
                         scope.launch {
                             sheetState.show()
                         }
                     },
-                    appViewModel.showMacAddress.value
+                    bluetoothViewModel.showMacAddress.value
                 )
             }
             Row(
@@ -83,28 +84,28 @@ fun BluetoothDevices(
                 ) {
                     IconButton(
                         onClick = {
-                            if(!bthDiscovering.value) {
+                            if(!bthDiscovering) {
                                 if(ContextCompat.checkSelfPermission(
                                         context,
                                         Manifest.permission.ACCESS_FINE_LOCATION
                                     ) == PackageManager.PERMISSION_GRANTED
                                 ) {
-                                    appViewModel.startDeviceScan()
+                                    bluetoothViewModel.startDiscovery()
                                 } else {
                                     requestPermissionLauncher.launch(
                                         Manifest.permission.ACCESS_FINE_LOCATION
                                     )
                                 }
-                            } else appViewModel.stopDeviceScan()
+                            } else bluetoothViewModel.stopDiscovery()
                         }
                     ) {
-                        if(bthDiscovering.value) Icon(Icons.Filled.Close, null)
+                        if(bthDiscovering) Icon(Icons.Filled.Close, null)
                         else Icon(Icons.Filled.Refresh, null)
                     }
                 }
             }
 
-            if(bthDiscovering.value)
+            if(bthDiscovering)
                 LinearProgressIndicator(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -114,8 +115,8 @@ fun BluetoothDevices(
 
             ScannedBluetoothDevices(
                 scannedDevices = scannedDevices,
-                { appViewModel.bondDevice(it) },
-                appViewModel.showMacAddress.value
+                { bluetoothViewModel.bindDevice(it) },
+                bluetoothViewModel.showMacAddress.value
             )
         }
     }

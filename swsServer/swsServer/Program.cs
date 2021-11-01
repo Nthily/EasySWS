@@ -60,6 +60,11 @@ namespace swsServer
                     }
                 }
 
+            } 
+            else
+            {
+                Console.Write("按下任意键继续");
+                Console.ReadKey();
             }
         }
 

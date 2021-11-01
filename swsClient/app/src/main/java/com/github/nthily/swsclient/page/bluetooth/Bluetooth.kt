@@ -1,11 +1,6 @@
 package com.github.nthily.swsclient.page.bluetooth
 
-import android.bluetooth.BluetoothDevice
-import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,43 +32,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.github.nthily.swsclient.ui.theme.SwsClientTheme
 import com.github.nthily.swsclient.utils.SecondaryText
-import com.github.nthily.swsclient.viewModel.AppViewModel
-import com.github.nthily.swsclient.viewModel.removeBond
+import com.github.nthily.swsclient.viewModel.BluetoothViewModel
 import kotlinx.coroutines.launch
-import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.navigation.NavHostController
-import com.github.nthily.swsclient.components.SteeringSensor
-import com.github.nthily.swsclient.page.console.Console
-import com.github.nthily.swsclient.utils.Sender
-import com.github.nthily.swsclient.viewModel.ConsoleViewModel
-import com.github.nthily.swsclient.viewModel.Screen
 
 @ExperimentalMaterialApi
 @Composable
 fun Bluetooth(
-    appViewModel: AppViewModel,
-    navController: NavHostController
+    bluetoothViewModel: BluetoothViewModel
 ) {
-
-    val bthReady by remember { appViewModel.bthReady }
-    val bthEnabled by remember { appViewModel.bthEnabled }
-    val macAddress by remember { appViewModel.showMacAddress }
-    val selectedDevice by remember { appViewModel.selectedPairedDevice }
-
+    val bthName by remember { bluetoothViewModel.bthName }
+    val bthReady by remember { bluetoothViewModel.bthReady }
+    val bthEnabled by remember { bluetoothViewModel.bthEnabled }
+    val macAddress by remember { bluetoothViewModel.showMacAddress }
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     ModalBottomSheetLayout(
         sheetState = sheetState,
         sheetContent = {
             SheetContent(
-                device = selectedDevice,
                 sheetState = sheetState,
-                connectDevice = { appViewModel.connectDevice(it, navController) }
+                bluetoothViewModel = bluetoothViewModel
             )
         }
     ) {
@@ -98,13 +77,11 @@ fun Bluetooth(
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.CenterEnd
                         ) {
-                            appViewModel.bthDevice?.let {
-                                Text(
-                                    text = it,
-                                    fontWeight = FontWeight.Bold,
-                                    style = MaterialTheme.typography.h6
-                                )
-                            }
+                            Text(
+                                text = bthName,
+                                fontWeight = FontWeight.Bold,
+                                style = MaterialTheme.typography.h6
+                            )
                         }
                     }
                     Spacer(Modifier.padding(vertical = 8.dp))
@@ -124,9 +101,9 @@ fun Bluetooth(
                                 checked = bthEnabled,
                                 onCheckedChange = {
                                     if(bthEnabled)
-                                        appViewModel.disableBluetooth()
+                                        bluetoothViewModel.disableBluetooth()
                                     else
-                                        appViewModel.enableBluetooth()
+                                        bluetoothViewModel.enableBluetooth()
                                 },
                                 colors = SwitchDefaults.colors(
                                     checkedTrackColor = Color(0xFF0079D3),
@@ -135,34 +112,35 @@ fun Bluetooth(
                             )
                         }
                     }
-
-                    Spacer(Modifier.padding(vertical = 8.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "显示 MAC 地址",
-                            fontWeight = FontWeight.Bold,
-                            style = MaterialTheme.typography.h6
-                        )
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.CenterEnd
+                    if(bthEnabled) {
+                        Spacer(Modifier.padding(vertical = 8.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Switch(
-                                checked = macAddress,
-                                onCheckedChange = {
-                                      appViewModel.showMacAddress.value = it
-                                },
-                                colors = SwitchDefaults.colors(
-                                    checkedTrackColor = Color(0xFF0079D3),
-                                    checkedThumbColor = Color(0xFF0079D3)
-                                )
+                            Text(
+                                text = "显示 MAC 地址",
+                                fontWeight = FontWeight.Bold,
+                                style = MaterialTheme.typography.h6
                             )
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.CenterEnd
+                            ) {
+                                Switch(
+                                    checked = macAddress,
+                                    onCheckedChange = {
+                                        bluetoothViewModel.showMacAddress.value = it
+                                    },
+                                    colors = SwitchDefaults.colors(
+                                        checkedTrackColor = Color(0xFF0079D3),
+                                        checkedThumbColor = Color(0xFF0079D3)
+                                    )
+                                )
+                            }
                         }
                     }
                     Spacer(Modifier.padding(vertical = 8.dp))
-                    BluetoothDevices(appViewModel, sheetState)
+                    BluetoothDevices(bluetoothViewModel, sheetState)
                 }
             }
         }
@@ -172,11 +150,12 @@ fun Bluetooth(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SheetContent(
-    device: BluetoothDevice?,
     sheetState: ModalBottomSheetState,
-    connectDevice: (device: BluetoothDevice) -> Unit
+    bluetoothViewModel: BluetoothViewModel
 ) {
     val scope = rememberCoroutineScope()
+    val device by remember { bluetoothViewModel.selectedPairedDevice }
+
     Column(
         modifier = Modifier
             .padding(15.dp)
@@ -192,11 +171,9 @@ fun SheetContent(
         Spacer(Modifier.padding(vertical = 15.dp))
         Button(
             onClick = {
-                device?.let {
-                    connectDevice(it)
-                    scope.launch {
-                        sheetState.hide()
-                    }
+                bluetoothViewModel.connectByBluetooth()
+                scope.launch {
+                    sheetState.hide()
                 }
             },
             colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF44D670)),
@@ -209,18 +186,15 @@ fun SheetContent(
         Spacer(Modifier.padding(vertical = 15.dp))
         Button(
             onClick = {
-                  device?.let {
-                      it.removeBond()
-                      scope.launch {
-                          sheetState.hide()
-                      }
-                  }
+                device?.let { bluetoothViewModel.unbindDevice(it) }
+                scope.launch {
+                    sheetState.hide()
+                }
             },
             colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF8488A5)),
             modifier = Modifier
                 .height(50.dp)
                 .fillMaxWidth(),
-
         ) {
             Text("取消配对")
         }
