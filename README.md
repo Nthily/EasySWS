@@ -96,7 +96,3 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ```
-
-## 7. 其他 🚑
-
-目前来说，整体项目结构还是有些混乱，比如 `app` 中 `VM` 里面的东西感觉很不符合 `VM` 的定位，之后有时间可能会大改几次项目的结构，以及补完其他地方的注释
