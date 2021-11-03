@@ -8,10 +8,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.nthily.swsclient.AppScreen
 import com.github.nthily.swsclient.components.BluetoothCenter
 import com.github.nthily.swsclient.components.DataClient
 import com.github.nthily.swsclient.components.Navigator
-import com.github.nthily.swsclient.ui.components.Screen
 import com.github.nthily.swsclient.utils.Utils
 import java.util.*
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +49,7 @@ class BluetoothViewModel(
                     Utils.log("服务器返回 $msg")
                     if (msg == "connected") {
                         viewModelScope.launch(Dispatchers.Main) {
-                            Navigator.getInstance()?.navigate(Screen.Console.route)
+                            Navigator.getInstance()?.navigate(AppScreen.console.route)
                         }
                     }
                 }

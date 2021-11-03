@@ -7,6 +7,5 @@ import androidx.lifecycle.AndroidViewModel
 class AppViewModel(
     application: Application
 ) : AndroidViewModel(application) {
-    var currentPage = mutableStateOf(0) // 当前选中的底部导航页面
 
 }

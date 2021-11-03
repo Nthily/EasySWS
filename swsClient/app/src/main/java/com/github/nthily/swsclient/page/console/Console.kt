@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
+import com.github.nthily.swsclient.AppScreen
 import com.github.nthily.swsclient.components.SteeringSensor
 import com.github.nthily.swsclient.ui.components.ComposeVerticalSlider
 import com.github.nthily.swsclient.ui.components.DownShiftButton
@@ -106,7 +107,7 @@ fun Console(
     }
 
     BackHandler(
-        enabled = navBackStackEntry.destination.route == Screen.Console.route
+        enabled = navBackStackEntry.destination.route == AppScreen.console.route
     ) {
         quit()
     }

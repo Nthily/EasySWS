@@ -14,6 +14,8 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +23,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.github.nthily.swsclient.components.BluetoothCenter
 import com.github.nthily.swsclient.components.DataClient
@@ -101,9 +104,14 @@ fun App(
     consoleViewModel: ConsoleViewModel
 ) {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
     val systemUiController = rememberSystemUiController()
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val useDarkIcons = MaterialTheme.colors.isLight
+
+    val appPages = listOf(AppScreen.bluetooth, AppScreen.network, AppScreen.settings)
 
     SideEffect {
         systemUiController.setStatusBarColor(Color.Transparent, useDarkIcons)
@@ -122,7 +130,6 @@ fun App(
         }
     }
 
-
     ModalBottomSheetLayout(
         sheetState = sheetState,
         sheetContent = {
@@ -133,23 +140,39 @@ fun App(
         }
     ) {
         Scaffold(
-            bottomBar = { BottomBar(navController) },
-            modifier = Modifier.fillMaxSize().systemBarsPadding()
+            bottomBar = {
+                if(currentDestination?.route != AppScreen.console.route) {
+                    BottomBar(
+                        navController= navController,
+                        pages = appPages,
+                    )
+                }
+            },
+            modifier = Modifier
+                .fillMaxSize()
+                .systemBarsPadding()
         ) {
-            NavHost(navController = navController, startDestination = Screen.Bluetooth.route) {
-                composable(Screen.Bluetooth.route) {
+            NavHost(navController = navController, startDestination = AppScreen.bluetooth.route) {
+                composable(AppScreen.bluetooth.route) {
                     Bluetooth(bluetoothViewModel, sheetState)
                 }
-                composable(Screen.Console.route) {
+                composable(AppScreen.console.route) {
                     Console(consoleViewModel, it) { bluetoothViewModel.disconnect() }
                 }
-                composable(Screen.Network.route) {
+                composable(AppScreen.network.route) {
                     NetWork()
                 }
-                composable(Screen.Settings.route) {
+                composable(AppScreen.settings.route) {
                     Settings()
                 }
             }
         }
     }
+}
+
+object AppScreen {
+    val bluetooth = Screen("bluetooth", name = "蓝牙", icon = R.drawable.bluetooth)
+    val console =  Screen("console", showBottomBar = false)
+    val network = Screen("network", name = "网络", icon = R.drawable.wifi)
+    val settings =  Screen("settings", name = "设置", icon = R.drawable.settings)
 }
