@@ -4,6 +4,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 
 让你的手机变成虚拟方向盘！适用于神力科莎，神力科莎争锋，F1 系列等赛车模拟游戏
 
+
 [演示视频](https://www.bilibili.com/video/BV1aP4y1b7cj?spm_id_from=333.999.0.0)
 
 ## 1. 开始安装 🚀
@@ -15,7 +16,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 
 |步骤1|步骤2|步骤3
 |------|-----|-------|
-|![14C88336C45DC2594ABD77142389C759](https://user-images.githubusercontent.com/31311826/140234451-75de5135-8881-45db-abdb-fda36e66646e.jpg)|<img src="https://user-images.githubusercontent.com/31311826/138748081-fa850e89-767e-4f75-878a-4f64993f04e1.jpg" height = 100% width = 100%>|![E8CA0E389ADF0761E9B3D5E188386CA8](https://user-images.githubusercontent.com/31311826/140234478-63c44405-7cde-4e50-a777-d290d949ec88.jpg)|
+|![14C88336C45DC2594ABD77142389C759](https://user-images.githubusercontent.com/31311826/140234451-75de5135-8881-45db-abdb-fda36e66646e.jpg)|![0843BBC1F633B14DE43FDD9AF8106FFC](https://user-images.githubusercontent.com/31311826/140234504-a176e13d-1c37-42a9-95bd-a90536eaf89c.jpg)|![E8CA0E389ADF0761E9B3D5E188386CA8](https://user-images.githubusercontent.com/31311826/140234478-63c44405-7cde-4e50-a777-d290d949ec88.jpg)|
 
 
 ## 2. 测试 && 游玩 💨
