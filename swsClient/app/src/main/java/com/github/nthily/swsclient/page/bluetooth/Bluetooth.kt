@@ -16,13 +16,11 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -34,62 +32,84 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.github.nthily.swsclient.utils.SecondaryText
 import com.github.nthily.swsclient.viewModel.BluetoothViewModel
+import com.google.accompanist.insets.systemBarsPadding
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
 fun Bluetooth(
-    bluetoothViewModel: BluetoothViewModel
+    bluetoothViewModel: BluetoothViewModel,
+    sheetState: ModalBottomSheetState
 ) {
     val bthName by remember { bluetoothViewModel.bthName }
     val bthReady by remember { bluetoothViewModel.bthReady }
     val bthEnabled by remember { bluetoothViewModel.bthEnabled }
     val macAddress by remember { bluetoothViewModel.showMacAddress }
-    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
-    ModalBottomSheetLayout(
-        sheetState = sheetState,
-        sheetContent = {
-            SheetContent(
-                sheetState = sheetState,
-                bluetoothViewModel = bluetoothViewModel
-            )
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF8F8F8))
+            .padding(horizontal = 14.dp)
+            .verticalScroll(rememberScrollState())
+            .systemBarsPadding()
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFFF8F8F8))
-                .padding(14.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            if(bthReady) {
-                Column {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
+        if(bthReady) {
+            Column {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "设备名称",
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.h6
+                    )
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.CenterEnd
                     ) {
                         Text(
-                            text = "设备名称",
+                            text = bthName,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.h6
                         )
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.CenterEnd
-                        ) {
-                            Text(
-                                text = bthName,
-                                fontWeight = FontWeight.Bold,
-                                style = MaterialTheme.typography.h6
-                            )
-                        }
                     }
+                }
+                Spacer(Modifier.padding(vertical = 8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "开启蓝牙",
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.h6
+                    )
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.CenterEnd
+                    ) {
+                        Switch(
+                            checked = bthEnabled,
+                            onCheckedChange = {
+                                if(bthEnabled)
+                                    bluetoothViewModel.disableBluetooth()
+                                else
+                                    bluetoothViewModel.enableBluetooth()
+                            },
+                            colors = SwitchDefaults.colors(
+                                checkedTrackColor = Color(0xFF0079D3),
+                                checkedThumbColor = Color(0xFF0079D3)
+                            )
+                        )
+                    }
+                }
+                if(bthEnabled) {
                     Spacer(Modifier.padding(vertical = 8.dp))
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "开启蓝牙",
+                            text = "显示 MAC 地址",
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.h6
                         )
@@ -98,12 +118,9 @@ fun Bluetooth(
                             contentAlignment = Alignment.CenterEnd
                         ) {
                             Switch(
-                                checked = bthEnabled,
+                                checked = macAddress,
                                 onCheckedChange = {
-                                    if(bthEnabled)
-                                        bluetoothViewModel.disableBluetooth()
-                                    else
-                                        bluetoothViewModel.enableBluetooth()
+                                    bluetoothViewModel.showMacAddress.value = it
                                 },
                                 colors = SwitchDefaults.colors(
                                     checkedTrackColor = Color(0xFF0079D3),
@@ -112,36 +129,9 @@ fun Bluetooth(
                             )
                         }
                     }
-                    if(bthEnabled) {
-                        Spacer(Modifier.padding(vertical = 8.dp))
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "显示 MAC 地址",
-                                fontWeight = FontWeight.Bold,
-                                style = MaterialTheme.typography.h6
-                            )
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.CenterEnd
-                            ) {
-                                Switch(
-                                    checked = macAddress,
-                                    onCheckedChange = {
-                                        bluetoothViewModel.showMacAddress.value = it
-                                    },
-                                    colors = SwitchDefaults.colors(
-                                        checkedTrackColor = Color(0xFF0079D3),
-                                        checkedThumbColor = Color(0xFF0079D3)
-                                    )
-                                )
-                            }
-                        }
-                    }
-                    Spacer(Modifier.padding(vertical = 8.dp))
-                    BluetoothDevices(bluetoothViewModel, sheetState)
                 }
+                Spacer(Modifier.padding(vertical = 8.dp))
+                BluetoothDevices(bluetoothViewModel, sheetState)
             }
         }
     }

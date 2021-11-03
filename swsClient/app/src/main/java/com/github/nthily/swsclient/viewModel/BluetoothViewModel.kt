@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.nthily.swsclient.components.BluetoothCenter
 import com.github.nthily.swsclient.components.DataClient
 import com.github.nthily.swsclient.components.Navigator
-import com.github.nthily.swsclient.ui.view.Screen
+import com.github.nthily.swsclient.ui.components.Screen
 import com.github.nthily.swsclient.utils.Utils
 import java.util.*
 import kotlinx.coroutines.Dispatchers

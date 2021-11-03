@@ -4,12 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -29,10 +30,11 @@ import com.github.nthily.swsclient.page.bluetooth.Bluetooth
 import com.github.nthily.swsclient.page.console.Console
 import com.github.nthily.swsclient.ui.theme.SwsClientTheme
 import com.github.nthily.swsclient.components.Sender
+import com.github.nthily.swsclient.page.bluetooth.SheetContent
 import com.github.nthily.swsclient.page.network.NetWork
 import com.github.nthily.swsclient.page.settings.Settings
-import com.github.nthily.swsclient.ui.view.BottomBar
-import com.github.nthily.swsclient.ui.view.Screen
+import com.github.nthily.swsclient.ui.components.BottomBar
+import com.github.nthily.swsclient.ui.components.Screen
 import com.github.nthily.swsclient.viewModel.AppViewModel
 import com.github.nthily.swsclient.viewModel.BluetoothViewModel
 import com.github.nthily.swsclient.viewModel.ConsoleViewModel
@@ -100,6 +102,7 @@ fun App(
 ) {
     val navController = rememberNavController()
     val systemUiController = rememberSystemUiController()
+    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val useDarkIcons = MaterialTheme.colors.isLight
 
     SideEffect {
@@ -119,24 +122,33 @@ fun App(
         }
     }
 
-    Scaffold(
-        bottomBar = { BottomBar(navController) },
-        modifier = Modifier.fillMaxSize().systemBarsPadding()
+
+    ModalBottomSheetLayout(
+        sheetState = sheetState,
+        sheetContent = {
+            SheetContent(
+                sheetState = sheetState,
+                bluetoothViewModel = bluetoothViewModel
+            )
+        }
     ) {
-        NavHost(navController = navController, startDestination = Screen.Bluetooth.route) {
-            composable(Screen.Bluetooth.route) {
-                Bluetooth(bluetoothViewModel)
-            }
-            composable(Screen.Console.route) {
-                Console(consoleViewModel, it) {
-                    bluetoothViewModel.disconnect()
+        Scaffold(
+            bottomBar = { BottomBar(navController) },
+            modifier = Modifier.fillMaxSize().systemBarsPadding()
+        ) {
+            NavHost(navController = navController, startDestination = Screen.Bluetooth.route) {
+                composable(Screen.Bluetooth.route) {
+                    Bluetooth(bluetoothViewModel, sheetState)
                 }
-            }
-            composable(Screen.Network.route) {
-                NetWork()
-            }
-            composable(Screen.Settings.route) {
-                Settings()
+                composable(Screen.Console.route) {
+                    Console(consoleViewModel, it) { bluetoothViewModel.disconnect() }
+                }
+                composable(Screen.Network.route) {
+                    NetWork()
+                }
+                composable(Screen.Settings.route) {
+                    Settings()
+                }
             }
         }
     }
