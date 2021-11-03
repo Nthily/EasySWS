@@ -219,8 +219,7 @@ class BluetoothViewModel(
 
     fun disconnect() {
         viewModelScope.launch {
-            DataClient.getInstance()?.disconnect()
-            Navigator.getInstance()?.back()
+           DataClient.getInstance()?.disconnect()
         }
     }
 
