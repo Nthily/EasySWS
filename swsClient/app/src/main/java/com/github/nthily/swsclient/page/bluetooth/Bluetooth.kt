@@ -60,7 +60,7 @@ fun Bluetooth(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFF8F8F8))
-                .padding(top = 48.dp, start = 14.dp, end = 14.dp)
+                .padding(14.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             if(bthReady) {

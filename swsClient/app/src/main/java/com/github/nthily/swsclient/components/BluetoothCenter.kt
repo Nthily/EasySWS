@@ -53,9 +53,9 @@ class BluetoothCenter private constructor(
     private val _bthAdapter = _bthManager.adapter
     private val _eventScope = CoroutineScope(Job() + Dispatchers.Default)
 
-    val name get() = _bthAdapter.name
+    val name: String get() = _bthAdapter.name
     val address get() = _bthAdapter.address
-    val boundDevices get() = _bthAdapter.bondedDevices
+    val boundDevices: MutableSet<BluetoothDevice> get() = _bthAdapter.bondedDevices
     val enabled get() = _bthAdapter.isEnabled
     val discovering get() = _bthAdapter.isDiscovering
 

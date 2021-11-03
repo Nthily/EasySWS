@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.nthily.swsclient.components.BluetoothCenter
 import com.github.nthily.swsclient.components.DataClient
 import com.github.nthily.swsclient.components.Navigator
+import com.github.nthily.swsclient.ui.view.Screen
 import com.github.nthily.swsclient.utils.Utils
 import java.util.*
 import kotlinx.coroutines.Dispatchers
@@ -65,7 +66,6 @@ class BluetoothViewModel(
             // 监听发现到的蓝牙设备
             launch {
                 BluetoothCenter.getInstance()?.deviceFoundFlow?.collect { e ->
-                    Log.d("AppViewModel", "发现了设备 ${e.device.name} (${e.device.address})")
                     // sort device from a -> z, not null -> null
                     // 排序，从 a -> z, 有名字到无名字的蓝牙设备
 

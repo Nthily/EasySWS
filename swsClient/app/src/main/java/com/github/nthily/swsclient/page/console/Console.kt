@@ -12,17 +12,16 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.github.nthily.swsclient.components.SteeringSensor
 import com.github.nthily.swsclient.ui.view.ComposeVerticalSlider
 import com.github.nthily.swsclient.ui.view.DownShiftButton
+import com.github.nthily.swsclient.ui.view.Screen
 import com.github.nthily.swsclient.ui.view.UpShiftButton
 import com.github.nthily.swsclient.ui.view.rememberComposeVerticalSliderState
 import com.github.nthily.swsclient.utils.Utils.findActivity
-import com.github.nthily.swsclient.viewModel.AppViewModel
-import com.github.nthily.swsclient.viewModel.BluetoothViewModel
 import com.github.nthily.swsclient.viewModel.ConsoleViewModel
-import com.github.nthily.swsclient.viewModel.Screen
 import java.util.*
 
 // 控制器的界面
@@ -31,7 +30,7 @@ import java.util.*
 @Composable
 fun Console(
     consoleViewModel: ConsoleViewModel,
-    navController: NavController,
+    navBackStackEntry: NavBackStackEntry,
     quit: () -> Unit
 ) {
 
@@ -108,7 +107,7 @@ fun Console(
     }
 
     BackHandler(
-        enabled = navController.currentBackStackEntry?.destination?.route == Screen.Console.route
+        enabled = navBackStackEntry.destination.route == Screen.Console.route
     ) {
         quit()
     }
