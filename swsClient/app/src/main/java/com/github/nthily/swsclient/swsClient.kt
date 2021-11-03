@@ -30,11 +30,11 @@ import com.github.nthily.swsclient.page.bluetooth.Bluetooth
 import com.github.nthily.swsclient.page.console.Console
 import com.github.nthily.swsclient.ui.theme.SwsClientTheme
 import com.github.nthily.swsclient.components.Sender
-import com.github.nthily.swsclient.page.bluetooth.SheetContent
 import com.github.nthily.swsclient.page.network.NetWork
 import com.github.nthily.swsclient.page.settings.Settings
 import com.github.nthily.swsclient.ui.components.BottomBar
 import com.github.nthily.swsclient.ui.components.Screen
+import com.github.nthily.swsclient.ui.components.SheetContent
 import com.github.nthily.swsclient.viewModel.AppViewModel
 import com.github.nthily.swsclient.viewModel.BluetoothViewModel
 import com.github.nthily.swsclient.viewModel.ConsoleViewModel

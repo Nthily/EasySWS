@@ -206,6 +206,7 @@ class BluetoothViewModel(
 
     fun connectByBluetooth() {
         viewModelScope.launch {
+            BluetoothCenter.getInstance()?.stopDiscovery()
             selectedPairedDevice.value?.let {
                 try {
                     DataClient.getInstance()?.connect(it, UUID.fromString(uuid))
