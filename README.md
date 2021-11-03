@@ -14,10 +14,8 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 * 运行下载完的 `app`, 和电脑设备进行配对（此操作也可以在手机的系统蓝牙完成），配对完成后会在已配对的列表中显示你的电脑设备，点击一次设备会弹出一个窗口，在底下点击开始连接就能尝试和电脑设备进行连接。连接成功会自动跳转到操控界面
 
 |步骤1|步骤2|步骤3
-
 |------|-----|-------|
-|||
-|![14C88336C45DC2594ABD77142389C759](https://user-images.githubusercontent.com/31311826/140234322-ebcc5dfb-7568-4917-bcfa-dbae2fe9cab8.jpg)|<img src="https://user-images.githubusercontent.com/31311826/138748081-fa850e89-767e-4f75-878a-4f64993f04e1.jpg" height = 100% width = 100%>||
+|![14C88336C45DC2594ABD77142389C759](https://user-images.githubusercontent.com/31311826/140234451-75de5135-8881-45db-abdb-fda36e66646e.jpg)|<img src="https://user-images.githubusercontent.com/31311826/138748081-fa850e89-767e-4f75-878a-4f64993f04e1.jpg" height = 100% width = 100%>|![E8CA0E389ADF0761E9B3D5E188386CA8](https://user-images.githubusercontent.com/31311826/140234478-63c44405-7cde-4e50-a777-d290d949ec88.jpg)|
 
 
 ## 2. 测试 && 游玩 💨
