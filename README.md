@@ -4,6 +4,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 
 让你的手机变成虚拟方向盘！适用于神力科莎，神力科莎争锋，F1 系列等赛车模拟游戏
 
+
 [演示视频](https://www.bilibili.com/video/BV1aP4y1b7cj?spm_id_from=333.999.0.0)
 
 ## 1. 开始安装 🚀
@@ -13,9 +14,9 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 * 运行下载完的 `exe`，这将会自动启动 `vjoy` 驱动 (期间会有 UAC 授权确认)，并且会开启电脑的蓝牙连接广播。如果检测不到 `vjoy` 或者未授权会停止软件的运行
 * 运行下载完的 `app`, 和电脑设备进行配对（此操作也可以在手机的系统蓝牙完成），配对完成后会在已配对的列表中显示你的电脑设备，点击一次设备会弹出一个窗口，在底下点击开始连接就能尝试和电脑设备进行连接。连接成功会自动跳转到操控界面
 
-|步骤1|步骤2|步骤3|
+|步骤1|步骤2|步骤3
 |------|-----|-------|
-|<img src="https://user-images.githubusercontent.com/31311826/138766412-10616020-bf44-4113-b2a3-01e0d08602f7.jpg" height = 100% width = 100%>|<img src="https://user-images.githubusercontent.com/31311826/138766529-62231ac1-f1c9-44d3-880c-20ddcd79db8d.jpg" height = 100% width = 100%>|<img src="https://user-images.githubusercontent.com/31311826/138748081-fa850e89-767e-4f75-878a-4f64993f04e1.jpg" height = 100% width = 100%>|
+|![14C88336C45DC2594ABD77142389C759](https://user-images.githubusercontent.com/31311826/140234451-75de5135-8881-45db-abdb-fda36e66646e.jpg)|![0843BBC1F633B14DE43FDD9AF8106FFC](https://user-images.githubusercontent.com/31311826/140234504-a176e13d-1c37-42a9-95bd-a90536eaf89c.jpg)|![E8CA0E389ADF0761E9B3D5E188386CA8](https://user-images.githubusercontent.com/31311826/140234478-63c44405-7cde-4e50-a777-d290d949ec88.jpg)|
 
 
 ## 2. 测试 && 游玩 💨
