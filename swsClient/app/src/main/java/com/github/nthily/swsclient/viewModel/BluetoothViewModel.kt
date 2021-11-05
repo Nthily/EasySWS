@@ -26,7 +26,6 @@ class BluetoothViewModel(
     private val app = getApplication<Application>()
 
     private val uuid = "00001101-0000-1000-8000-00805F9B34FB"   // 接收端蓝牙服务 UUID
-    private var isBondingAnyDevice = false // 当前是否有蓝牙设备正在配对，如果没有的话则可以配对设备
 
     val bthName = mutableStateOf("") // 蓝牙设备名
     val pairedDevices = mutableStateListOf<BluetoothDevice>() // 已配对的蓝牙设备列表
@@ -36,6 +35,7 @@ class BluetoothViewModel(
     var bthEnabled = mutableStateOf(false) // 蓝牙是否已启用
     var showMacAddress = mutableStateOf(false) // 是否显示 mac 地址
     var bthDiscovering = mutableStateOf(false) // 是否正在搜索蓝牙设备
+    var isBondingAnyDevice = mutableStateOf(false)// 当前是否有蓝牙设备正在配对，如果没有的话则可以配对设备以及刷新蓝牙设备
 
     var selectedPairedDevice = mutableStateOf<BluetoothDevice?>(null) // 当前被选中的已配对的蓝牙设备，用于底部弹窗
 
@@ -134,7 +134,7 @@ class BluetoothViewModel(
                 BluetoothCenter.getInstance()?.deviceBoundFlow?.collect { e ->
                     pairedDevices.add(e.device)
                     scannedDevices.remove(e.device)
-                    isBondingAnyDevice = false
+                    isBondingAnyDevice.value = false
                 }
             }
 
@@ -152,7 +152,7 @@ class BluetoothViewModel(
                     if (e.failed) {
                         scannedDevices.remove(e.device)
                         scannedDevices.add(e.device)
-                        isBondingAnyDevice = false
+                        isBondingAnyDevice.value = false
                     } else {
                         pairedDevices.remove(e.device)
                     }
@@ -194,9 +194,9 @@ class BluetoothViewModel(
     }
 
     fun bindDevice(device: BluetoothDevice) {
-        if(!isBondingAnyDevice) {
+        if(!isBondingAnyDevice.value) {
             BluetoothCenter.getInstance()?.bind(device)
-            isBondingAnyDevice = true
+            isBondingAnyDevice.value = true
         }
     }
 

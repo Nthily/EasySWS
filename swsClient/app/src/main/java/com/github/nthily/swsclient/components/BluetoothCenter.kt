@@ -19,6 +19,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
+/*
+    处理关于蓝牙模块的所有东西
+ */
+
 class BluetoothCenter private constructor(
     context: Context
 ) : BroadcastReceiver(), DefaultLifecycleObserver {
@@ -48,8 +52,7 @@ class BluetoothCenter private constructor(
     val deviceRenameFlow = _deviceRenameFlow.asSharedFlow()
 
     private val _appContext = context.applicationContext
-    private val _bthManager = _appContext.getSystemService(
-        BLUETOOTH_SERVICE) as BluetoothManager
+    private val _bthManager = _appContext.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
     private val _bthAdapter = _bthManager.adapter
     private val _eventScope = CoroutineScope(Job() + Dispatchers.Default)
 
@@ -58,7 +61,6 @@ class BluetoothCenter private constructor(
     val boundDevices: MutableSet<BluetoothDevice> get() = _bthAdapter.bondedDevices
     val enabled get() = _bthAdapter.isEnabled
     val discovering get() = _bthAdapter.isDiscovering
-
 
     init {
         if (_bthAdapter == null)

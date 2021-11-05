@@ -46,6 +46,7 @@ fun BluetoothDevices(
     val scannedDevices = remember { bluetoothViewModel.scannedDevices }
     val bthEnabled by remember { bluetoothViewModel.bthEnabled }
     val bthDiscovering by remember { bluetoothViewModel.bthDiscovering }
+    val bindingDevice by remember { bluetoothViewModel.isBondingAnyDevice }
     val scope = rememberCoroutineScope()
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
@@ -97,7 +98,8 @@ fun BluetoothDevices(
                                     )
                                 }
                             } else bluetoothViewModel.stopDiscovery()
-                        }
+                        },
+                        enabled = !bindingDevice
                     ) {
                         if(bthDiscovering) Icon(Icons.Filled.Close, null)
                         else Icon(Icons.Filled.Refresh, null)
