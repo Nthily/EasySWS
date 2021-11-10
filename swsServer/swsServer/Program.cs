@@ -70,10 +70,7 @@ namespace swsServer
 
         static public void getDeviceInfo(BluetoothRadio bluetoothRadio, BluetoothClient bluetoothClient)
         {
-            Console.WriteLine($"本机蓝牙名称： {bluetoothRadio.Name}\n" +
-                $"Mac 地址：{bluetoothRadio.LocalAddress}\n");
-
-            Console.WriteLine("\n");
+            Console.WriteLine($"本机蓝牙名称： {bluetoothRadio.Name}\n");
 
             foreach (BluetoothDeviceInfo device in bluetoothClient.PairedDevices)
             {

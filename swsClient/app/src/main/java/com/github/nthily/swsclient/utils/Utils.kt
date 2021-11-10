@@ -25,10 +25,3 @@ object Utils {
     }
 
 }
-
-@Composable
-fun SecondaryText(str: String) {
-    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-        Text(str)
-    }
-}

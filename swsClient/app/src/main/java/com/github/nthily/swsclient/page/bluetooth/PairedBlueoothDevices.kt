@@ -26,7 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.github.nthily.swsclient.R
-import com.github.nthily.swsclient.utils.SecondaryText
+import com.github.nthily.swsclient.ui.components.SecondaryText
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -74,7 +74,7 @@ fun PairedBluetoothDevices(
                         }
                         if(displayMacAddress) {
                             item.address?.let {
-                                SecondaryText(it)
+                                SecondaryText { Text(it) }
                             }
                         }
                     }

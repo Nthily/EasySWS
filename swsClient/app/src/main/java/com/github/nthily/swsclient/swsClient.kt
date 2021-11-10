@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavControllerVisibleEntries
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -52,6 +54,7 @@ class MainActivity : ComponentActivity(){
     private val bluetoothViewModel by viewModels<BluetoothViewModel>()
     private val consoleViewModel by viewModels<ConsoleViewModel>()
 
+    @ExperimentalAnimationApi
     @ExperimentalComposeUiApi
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,6 +98,8 @@ class MainActivity : ComponentActivity(){
 
 }
 
+@OptIn(NavControllerVisibleEntries::class)
+@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
@@ -104,7 +109,7 @@ fun App(
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
+    val currentDestination = navBackStackEntry?.destination?.route
 
     val systemUiController = rememberSystemUiController()
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -140,12 +145,11 @@ fun App(
     ) {
         Scaffold(
             bottomBar = {
-                if(currentDestination?.route != AppScreen.console.route) {
-                    BottomBar(
-                        navController= navController,
-                        pages = appPages,
-                    )
-                }
+                BottomBar(
+                    navController= navController,
+                    pages = appPages,
+                    isShown = currentDestination != AppScreen.console.route
+                )
             },
             modifier = Modifier
                 .fillMaxSize()
@@ -162,7 +166,7 @@ fun App(
                     NetWork()
                 }
                 composable(AppScreen.settings.route) {
-                    Settings()
+                    Settings(navController)
                 }
             }
         }

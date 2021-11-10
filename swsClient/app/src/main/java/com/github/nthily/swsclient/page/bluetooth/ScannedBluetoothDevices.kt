@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.github.nthily.swsclient.utils.SecondaryText
+import com.github.nthily.swsclient.ui.components.SecondaryText
 
 @Composable
 fun ScannedBluetoothDevices(
@@ -59,11 +59,11 @@ fun ScannedBluetoothDevices(
                         }
                         if(item.name == null) {
                             item.address?.let {
-                                SecondaryText(it)
+                                SecondaryText { Text(it) }
                             }
                         } else if(displayMacAddress) {
                             item.address?.let {
-                                SecondaryText(it)
+                                SecondaryText { Text(it) }
                             }
                         }
                     }

@@ -6,7 +6,7 @@ task clean(type: Delete) {
 
 buildscript {
     ext {
-        compose_version = '1.0.4'
+        compose_version = '1.0.5'
     }
     repositories {
         google()

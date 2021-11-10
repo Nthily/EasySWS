@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.github.nthily.swsclient.utils.SecondaryText
 import com.github.nthily.swsclient.viewModel.BluetoothViewModel
 import kotlinx.coroutines.launch
 
@@ -45,7 +44,7 @@ fun SheetContent(
             fontWeight = FontWeight.Bold
         )
         Spacer(Modifier.padding(vertical = 5.dp))
-        SecondaryText(str = "你可能想要")
+        SecondaryText { Text("你可能想要") }
         Spacer(Modifier.padding(vertical = 15.dp))
         Button(
             onClick = {
