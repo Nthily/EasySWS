@@ -63,7 +63,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 数据包中的数据包长度是为了避免在高速传输数据中，因为 `inputStream` 可能无法完整的读取包的长度，导致读取数据失败（因为蓝牙传输可能是和 TCP 协议类似，面向流的）。所以设计了一个长度来描述这个数据包的长度，之后再循环读取真正的包的数据
 
 * PC 端
-* 
+
   * `Visual Studio`
   * `InTheHand.Net.Bluetooth` 库，版本 `4.0.21`
 
