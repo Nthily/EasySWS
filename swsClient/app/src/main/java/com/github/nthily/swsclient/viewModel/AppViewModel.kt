@@ -7,5 +7,5 @@ import androidx.lifecycle.AndroidViewModel
 class AppViewModel(
     application: Application
 ) : AndroidViewModel(application) {
-
+    var text = mutableStateOf("")
 }

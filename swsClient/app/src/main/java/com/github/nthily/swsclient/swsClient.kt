@@ -2,7 +2,9 @@ package com.github.nthily.swsclient
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,6 +38,7 @@ import com.github.nthily.swsclient.ui.theme.SwsClientTheme
 import com.github.nthily.swsclient.components.Sender
 import com.github.nthily.swsclient.page.network.NetWork
 import com.github.nthily.swsclient.page.settings.Settings
+import com.github.nthily.swsclient.page.settings.Test
 import com.github.nthily.swsclient.ui.components.BottomBar
 import com.github.nthily.swsclient.ui.components.Screen
 import com.github.nthily.swsclient.ui.components.SheetContent
@@ -54,40 +57,52 @@ class MainActivity : ComponentActivity(){
     private val bluetoothViewModel by viewModels<BluetoothViewModel>()
     private val consoleViewModel by viewModels<ConsoleViewModel>()
 
-    @ExperimentalAnimationApi
     @ExperimentalComposeUiApi
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 初始化组件
-        BluetoothCenter.getInstance(applicationContext).bind(this)
-        SteeringSensor.getInstance(applicationContext).bind(this)
-        DataClient.getInstance(applicationContext) {
-            val buffer = ByteArray(1024)
-            val len = read(buffer)
-            buffer.sliceArray(0 until len)
-        }.bind(this)
-        Navigator.getInstance(applicationContext).bind(this)
+        val requestPermission = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) {
+            it.values.forEach { isGranted ->
+                if (!isGranted) finish()
+            }
+            BluetoothCenter.getInstance(applicationContext).bind(this)
+            SteeringSensor.getInstance(applicationContext).bind(this)
+            DataClient.getInstance(applicationContext) {
+                val buffer = ByteArray(1024)
+                val len = read(buffer)
+                buffer.sliceArray(0 until len)
+            }.bind(this)
+            Navigator.getInstance(applicationContext).bind(this)
 
-        // 转发传感器数据
-        lifecycleScope.launch {
-            DataClient.getInstance()?.repeatWhenConnected {
-                SteeringSensor.getInstance()?.steeringFlow?.collect { e ->
-                    DataClient.getInstance()?.send(Sender.getSensorData(e.steering))
+            // 转发传感器数据
+            lifecycleScope.launch {
+                DataClient.getInstance()?.repeatWhenConnected {
+                    SteeringSensor.getInstance()?.steeringFlow?.collect { e ->
+                        DataClient.getInstance()?.send(Sender.getSensorData(e.steering))
+                    }
+                }
+            }
+
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+
+            setContent {
+                SwsClientTheme {
+                    ProvideWindowInsets {
+                        App(bluetoothViewModel, consoleViewModel, appViewModel)
+                    }
                 }
             }
         }
-
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        setContent {
-            SwsClientTheme {
-                ProvideWindowInsets {
-                    App(bluetoothViewModel, consoleViewModel)
-                }
-            }
-        }
+        requestPermission.launch(
+            arrayOf(
+                android.Manifest.permission.BLUETOOTH_CONNECT,
+                android.Manifest.permission.BLUETOOTH_SCAN,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        )
     }
 
     companion object {
@@ -99,13 +114,13 @@ class MainActivity : ComponentActivity(){
 }
 
 @OptIn(NavControllerVisibleEntries::class)
-@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
 fun App(
     bluetoothViewModel: BluetoothViewModel,
-    consoleViewModel: ConsoleViewModel
+    consoleViewModel: ConsoleViewModel,
+    appViewModel: AppViewModel
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -115,12 +130,11 @@ fun App(
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val useDarkIcons = MaterialTheme.colors.isLight
 
-    val appPages = listOf(AppScreen.bluetooth, AppScreen.network, AppScreen.settings)
-
+  //  val appPages = listOf(AppScreen.bluetooth, AppScreen.network, AppScreen.settings)
+    val appPages = listOf(AppScreen.bluetooth)
     SideEffect {
         systemUiController.setStatusBarColor(Color.Transparent, useDarkIcons)
     }
-
     LaunchedEffect(Unit) {
         Navigator.getInstance()?.navigateFlow?.collect { e ->
             when (e) {
@@ -166,7 +180,7 @@ fun App(
                     NetWork()
                 }
                 composable(AppScreen.settings.route) {
-                    Settings(navController)
+                    Settings(navController, appViewModel)
                 }
             }
         }
