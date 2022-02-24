@@ -16,7 +16,12 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,9 +31,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.nthily.swsclient.R
 import com.github.nthily.swsclient.ui.components.SecondaryText
+import com.github.nthily.swsclient.viewModel.AppViewModel
 
 @Composable
-fun Settings(navController: NavController) {
+fun Settings(navController: NavController, appViewModel: AppViewModel) {
+    var text by remember { appViewModel.text }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -42,6 +49,15 @@ fun Settings(navController: NavController) {
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(Modifier.padding(vertical = 10.dp))
+        TextField(
+            value = text,
+            onValueChange = {
+                appViewModel.text.value = it
+            }
+        )
+        Button(onClick = { navController.navigate("test") }) {
+
+        }
       //  Bluetooth()
     }
 }
@@ -90,4 +106,9 @@ fun Bluetooth() {
             }
         }
     }
+}
+
+@Composable
+fun Test() {
+    Box(modifier = Modifier.fillMaxSize().background(Color.Red))
 }

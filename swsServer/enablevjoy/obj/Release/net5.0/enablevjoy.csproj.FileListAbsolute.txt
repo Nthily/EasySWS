@@ -1,0 +1,16 @@
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\bin\Release\net5.0\enablevjoy.exe
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\bin\Release\net5.0\enablevjoy.deps.json
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\bin\Release\net5.0\enablevjoy.runtimeconfig.json
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\bin\Release\net5.0\enablevjoy.runtimeconfig.dev.json
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\bin\Release\net5.0\enablevjoy.dll
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\bin\Release\net5.0\ref\enablevjoy.dll
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\bin\Release\net5.0\enablevjoy.pdb
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\obj\Release\net5.0\enablevjoy.csproj.AssemblyReference.cache
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\obj\Release\net5.0\enablevjoy.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\obj\Release\net5.0\enablevjoy.AssemblyInfoInputs.cache
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\obj\Release\net5.0\enablevjoy.AssemblyInfo.cs
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\obj\Release\net5.0\enablevjoy.csproj.CoreCompileInputs.cache
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\obj\Release\net5.0\enablevjoy.dll
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\obj\Release\net5.0\ref\enablevjoy.dll
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\obj\Release\net5.0\enablevjoy.pdb
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\obj\Release\net5.0\enablevjoy.genruntimeconfig.cache

@@ -1,5 +1,7 @@
 package com.github.nthily.swsclient.components
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -9,8 +11,11 @@ import android.content.Context.BLUETOOTH_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.activity.ComponentActivity
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.github.nthily.swsclient.utils.removeBond
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,11 +23,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.util.jar.Manifest
+import kotlin.reflect.KProperty
 
 /*
     处理关于蓝牙模块的所有东西
  */
 
+@SuppressLint("MissingPermission", "HardwareIds")
 class BluetoothCenter private constructor(
     context: Context
 ) : BroadcastReceiver(), DefaultLifecycleObserver {
@@ -56,9 +64,12 @@ class BluetoothCenter private constructor(
     private val _bthAdapter = _bthManager.adapter
     private val _eventScope = CoroutineScope(Job() + Dispatchers.Default)
 
-    val name: String get() = _bthAdapter.name
-    val address get() = _bthAdapter.address
-    val boundDevices: MutableSet<BluetoothDevice> get() = _bthAdapter.bondedDevices
+    val name: String?
+        get() = tryOrNull { _bthAdapter.name }
+    val address: String?
+        get() = tryOrNull { _bthAdapter.address }
+    val boundDevices: MutableSet<BluetoothDevice>?
+        get() = tryOrNull { _bthAdapter.bondedDevices }
     val enabled get() = _bthAdapter.isEnabled
     val discovering get() = _bthAdapter.isDiscovering
 
@@ -67,6 +78,10 @@ class BluetoothCenter private constructor(
             throw IllegalStateException("Bluetooth adapter is not found")
     }
 
+
+    fun initDevice() {
+
+    }
 
     fun bind(activity: ComponentActivity) {
         activity.lifecycle.addObserver(this)
@@ -80,7 +95,6 @@ class BluetoothCenter private constructor(
 
     fun disable() {
         if (!enabled) return
-
         _bthAdapter.disable()
     }
 
@@ -219,7 +233,6 @@ class BluetoothCenter private constructor(
         }
     }
 
-
     companion object {
 
         private const val TAG = "BluetoothCenter"
@@ -252,5 +265,14 @@ class BluetoothCenter private constructor(
         data class DeviceDisconnectEvent(val device: BluetoothDevice) : EventInfo
         data class DeviceRenameEvent(val device: BluetoothDevice, val name: String) : EventInfo
 
+    }
+}
+
+fun <T> tryOrNull(block: () -> T?): T? {
+    return try {
+        block()
+    } catch (e: SecurityException) {
+        e.printStackTrace()
+        null
     }
 }

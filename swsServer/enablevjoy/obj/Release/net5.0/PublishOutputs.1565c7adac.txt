@@ -1,0 +1,5 @@
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\bin\Release\net5.0\publish\enablevjoy.exe
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\bin\Release\net5.0\publish\enablevjoy.dll
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\bin\Release\net5.0\publish\enablevjoy.deps.json
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\bin\Release\net5.0\publish\enablevjoy.runtimeconfig.json
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\enablevjoy\bin\Release\net5.0\publish\enablevjoy.pdb

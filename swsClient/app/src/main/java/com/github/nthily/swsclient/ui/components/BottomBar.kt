@@ -1,6 +1,5 @@
 package com.github.nthily.swsclient.ui.components
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -13,7 +12,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 
-@ExperimentalAnimationApi
 @Composable
 fun BottomBar(
     navController: NavController,

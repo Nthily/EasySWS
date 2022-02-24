@@ -41,20 +41,13 @@ fun BluetoothDevices(
     bluetoothViewModel: BluetoothViewModel,
     sheetState: ModalBottomSheetState
 ) {
-    val context = LocalContext.current
+
     val pairedDevices = remember { bluetoothViewModel.pairedDevices }
     val scannedDevices = remember { bluetoothViewModel.scannedDevices }
     val bthEnabled by remember { bluetoothViewModel.bthEnabled }
     val bthDiscovering by remember { bluetoothViewModel.bthDiscovering }
     val bindingDevice by remember { bluetoothViewModel.isBondingAnyDevice }
     val scope = rememberCoroutineScope()
-
-    val requestPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) bluetoothViewModel.startDiscovery()
-        else Toast.makeText(context, "开启权限失败", Toast.LENGTH_LONG).show()
-    }
 
     if(bthEnabled) {
         Column {
@@ -86,17 +79,7 @@ fun BluetoothDevices(
                     IconButton(
                         onClick = {
                             if(!bthDiscovering) {
-                                if(ContextCompat.checkSelfPermission(
-                                        context,
-                                        Manifest.permission.ACCESS_FINE_LOCATION
-                                    ) == PackageManager.PERMISSION_GRANTED
-                                ) {
-                                    bluetoothViewModel.startDiscovery()
-                                } else {
-                                    requestPermissionLauncher.launch(
-                                        Manifest.permission.ACCESS_FINE_LOCATION
-                                    )
-                                }
+                                bluetoothViewModel.startDiscovery()
                             } else bluetoothViewModel.stopDiscovery()
                         },
                         enabled = !bindingDevice
