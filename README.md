@@ -60,7 +60,12 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 
 * 数据包长度 = 数据包类型 + 子类型 + 数据
 
-数据包中的数据包长度是为了避免在高速传输数据中，因为 `inputStream` 可能无法完整的读取包的长度，导致读取数据失败（因为蓝牙传输可能是和 TCP 协议类似，面向流的）。所以设计了一个长度来描述这个数据包的长度，之后再循环读取真正的包的数据
+
+蓝牙的通用数据传输协议有两种，分别是 SPP 协议 和 BLE 协议，而 SPP 协议利用 Socket 形式来实现数据传输。
+
+数据包中的数据包长度是为了避免在高速传输数据中，服务端收到的数据并不是按原先约定的 TLV 一包一包数据，可能会被拆包，导致读取数据失败。
+
+所以设计了一个长度来描述这个数据包的长度，之后再循环读取真正的包的数据
 
 * PC 端
 
@@ -73,7 +78,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 * PC 端的 UI 设计
 * 多语言 （PC / APP）
 * APP 端的 UI 设计
-* 支持更多 vJoy 轴 / 按钮，尝试实现一些力反馈
+* 支持更多 vJoy 轴 / 按钮
 * 根据不同手机支持的硬件设备提高体验，如在一些手机上可以调用线性马达
 * 待续...
 
