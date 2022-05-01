@@ -27,7 +27,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 
 ![image](https://user-images.githubusercontent.com/31311826/138749275-3e9554c6-e2c0-4a85-b47d-5cb903da0831.png)
 
-注意右边的 “检测到的设备”，如果成功安装 `vJoy` 并且打开了 `vJoy` 驱动，将会显示 `vJoy Device` 以及 `8` 条都在中间的轴
+注意右边的 “检测到的控制器”，如果成功安装 `vJoy` 并且打开了 `vJoy` 驱动，将会显示 `vJoy Device` 以及 `8` 条都在中间的轴
 
 * 开启了 `exe` 并且和 `app` 成功连接的情况下
 
