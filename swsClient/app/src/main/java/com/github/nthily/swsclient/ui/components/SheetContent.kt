@@ -1,6 +1,7 @@
 package com.github.nthily.swsclient.ui.components
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.github.nthily.swsclient.viewModel.BluetoothViewModel
 import kotlinx.coroutines.launch
 
+@SuppressLint("MissingPermission")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SheetContent(

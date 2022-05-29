@@ -1,34 +1,29 @@
-package com.github.nthily.swsclient.page.console
+package com.github.nthily.swsclient.page.console.solution
 
 import android.content.pm.ActivityInfo
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavBackStackEntry
 import com.github.nthily.swsclient.AppScreen
 import com.github.nthily.swsclient.components.SteeringSensor
 import com.github.nthily.swsclient.ui.components.ComposeVerticalSlider
-import com.github.nthily.swsclient.ui.components.DownShiftButton
-import com.github.nthily.swsclient.ui.components.Screen
-import com.github.nthily.swsclient.ui.components.UpShiftButton
 import com.github.nthily.swsclient.ui.components.rememberComposeVerticalSliderState
 import com.github.nthily.swsclient.utils.Utils.findActivity
 import com.github.nthily.swsclient.viewModel.ConsoleViewModel
-import java.util.*
 
-// 控制器的界面
-
-@ExperimentalComposeUiApi
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun Console(
+fun ConsoleTwo(
     consoleViewModel: ConsoleViewModel,
     navBackStackEntry: NavBackStackEntry,
     quit: () -> Unit
@@ -60,49 +55,48 @@ fun Console(
         }
     }
 
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(vertical = 15.dp),
-    ) {
+    ConstraintLayout(Modifier.fillMaxSize()) {
 
-        ComposeVerticalSlider( // 刹车
-            state = brakeState,
-            progressValue = (brakeValue * 100).toInt(),
-            onProgressChanged =  {
-                consoleViewModel.brakeValue.value = it / 100f
+        val (throttle, brake) = createRefs()
+
+        Box(
+            modifier = Modifier.constrainAs(brake) {
+                end.linkTo(throttle.start, margin = 48.dp)
+                centerVerticallyTo(parent)
+            }
+        ) {
+            ComposeVerticalSlider( // 刹车
+                state = brakeState,
+                progressValue = (brakeValue * 100).toInt(),
+                onProgressChanged =  {
+                    consoleViewModel.brakeValue.value = it / 100f
+                    consoleViewModel.sendBrakeValue(brakeValue)
+                }
+            ) {
+                consoleViewModel.brakeValue.value = 0f
+                brakeState.update(0)
                 consoleViewModel.sendBrakeValue(brakeValue)
             }
-        ) {
-            consoleViewModel.brakeValue.value = 0f
-            brakeState.update(0)
-            consoleViewModel.sendBrakeValue(brakeValue)
         }
 
-        Spacer(Modifier.padding(horizontal = 10.dp))
-        UpShiftButton { // 升档
-            consoleViewModel.sendUpShiftValue()
-        }
-
-        Spacer(Modifier.padding(horizontal = 60.dp))
-        DownShiftButton { // 降档
-            consoleViewModel.sendDownShiftValue()
-        }
-
-        Spacer(Modifier.padding(horizontal = 10.dp))
-        ComposeVerticalSlider( // 油门
-            state = throttleState,
-            progressValue = (throttleValue * 100).toInt(),
-            onProgressChanged =  {
-                consoleViewModel.throttleValue.value = it / 100f
-                consoleViewModel.sendThrottleValue(throttleValue)
+        Box(
+            modifier = Modifier.constrainAs(throttle) {
+                end.linkTo(parent.end, margin = 16.dp)
+                centerVerticallyTo(parent)
             }
         ) {
-            consoleViewModel.throttleValue.value = 0f
-            throttleState.update(0)
-            consoleViewModel.sendThrottleValue(throttleValue)
+            ComposeVerticalSlider( // 油门
+                state = throttleState,
+                progressValue = (throttleValue * 100).toInt(),
+                onProgressChanged =  {
+                    consoleViewModel.throttleValue.value = it / 100f
+                    consoleViewModel.sendThrottleValue(throttleValue)
+                }
+            ) {
+                consoleViewModel.throttleValue.value = 0f
+                throttleState.update(0)
+                consoleViewModel.sendThrottleValue(throttleValue)
+            }
         }
     }
 
@@ -111,4 +105,6 @@ fun Console(
     ) {
         quit()
     }
+
+
 }

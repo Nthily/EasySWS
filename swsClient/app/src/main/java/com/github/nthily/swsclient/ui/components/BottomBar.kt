@@ -22,6 +22,7 @@ fun BottomBar(
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
 
+
         BottomNavigation(
             backgroundColor = Color.White
         ) {

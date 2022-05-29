@@ -1,6 +1,7 @@
 package com.github.nthily.swsclient
 
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -27,7 +28,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.github.nthily.swsclient.components.*
 import com.github.nthily.swsclient.page.bluetooth.Bluetooth
-import com.github.nthily.swsclient.page.console.Console
+import com.github.nthily.swsclient.page.console.solution.ConsoleOne
+import com.github.nthily.swsclient.page.console.solution.ConsoleTwo
 import com.github.nthily.swsclient.ui.theme.SwsClientTheme
 import com.github.nthily.swsclient.page.network.NetWork
 import com.github.nthily.swsclient.page.settings.Settings
@@ -43,13 +45,14 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+@ExperimentalComposeUiApi
 class MainActivity : ComponentActivity(){
 
     private val appViewModel by viewModels<AppViewModel>()
     private val bluetoothViewModel by viewModels<BluetoothViewModel>()
     private val consoleViewModel by viewModels<ConsoleViewModel>()
 
-    @ExperimentalComposeUiApi
+
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +90,16 @@ class MainActivity : ComponentActivity(){
 
     companion object {
         private const val TAG = "MainActivity"
+    }
+
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            consoleViewModel.sendDownShiftValue()
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            consoleViewModel.sendUpShiftValue()
+        }
+        return true
     }
 
 }
@@ -152,7 +165,8 @@ fun App(
                     Bluetooth(bluetoothViewModel, sheetState)
                 }
                 composable(AppScreen.console.route) {
-                    Console(consoleViewModel, it) { bluetoothViewModel.disconnect() }
+                    ConsoleOne(consoleViewModel, it) { bluetoothViewModel.disconnect() }
+                   // ConsoleTwo(consoleViewModel, it) { bluetoothViewModel.disconnect() }
                 }
                 composable(AppScreen.network.route) {
                     NetWork()

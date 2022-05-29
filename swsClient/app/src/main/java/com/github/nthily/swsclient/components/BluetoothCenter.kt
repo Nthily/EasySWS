@@ -152,6 +152,7 @@ class BluetoothCenter private constructor(
         _eventScope.launch {
             when (intent?.action) {
                 BluetoothAdapter.ACTION_STATE_CHANGED -> {
+
                     val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
 
                     when (state) {
