@@ -73,7 +73,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 * PC 端的 UI 设计
 * 多语言 （PC / APP）
 * APP 端的 UI 设计
-* 支持更多 vJoy 轴 / 按钮，尝试实现一些力反馈
+* 支持更多 vJoy 轴 / 按钮
 * 根据不同手机支持的硬件设备提高体验，如在一些手机上可以调用线性马达
 * 待续...
 
